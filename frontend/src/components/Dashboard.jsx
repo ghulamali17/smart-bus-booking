@@ -1,11 +1,11 @@
 import React from 'react';
-import { 
-  Bus, 
-  Ticket, 
-  CheckCircle2, 
-  ArrowRight, 
-  Search, 
-  ShieldCheck, 
+import {
+  Bus,
+  Ticket,
+  CheckCircle2,
+  ArrowRight,
+  Search,
+  ShieldCheck,
   TrendingUp,
   Clock,
   MapPin,
@@ -16,14 +16,14 @@ import {
 export default function Dashboard({ routes, bookings, setActiveTab, setSelectedRouteId }) {
   const confirmedBookings = bookings.filter(b => b.status === 'Confirmed');
   const cancelledBookings = bookings.filter(b => b.status === 'Cancelled');
-  
+
   const totalRevenue = confirmedBookings.reduce((sum, b) => sum + b.total_fare, 0);
   const totalSeatsCapacity = routes.reduce((sum, r) => sum + r.total_seats, 0);
   const totalSeatsAvailable = routes.reduce((sum, r) => sum + r.available_seats, 0);
   const totalReservedSeats = confirmedBookings.reduce((sum, b) => sum + b.seats, 0);
 
-  const occupancyRate = totalSeatsCapacity > 0 
-    ? Math.round(((totalSeatsCapacity - totalSeatsAvailable) / totalSeatsCapacity) * 100) 
+  const occupancyRate = totalSeatsCapacity > 0
+    ? Math.round(((totalSeatsCapacity - totalSeatsAvailable) / totalSeatsCapacity) * 100)
     : 0;
 
   return (
@@ -42,10 +42,6 @@ export default function Dashboard({ routes, bookings, setActiveTab, setSelectedR
         />
 
         <div className="relative z-10 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-amber-300 border border-white/10 text-xs font-semibold backdrop-blur-md mb-3.5">
-            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Passenger Travel &amp; Reservation Hub</span>
-          </div>
 
           <h1 className="sb-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight">
             Welcome to SmartBus Express
@@ -138,8 +134,8 @@ export default function Dashboard({ routes, bookings, setActiveTab, setSelectedR
             </span>
           </div>
           <div className="mt-2.5 w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-            <div 
-              className="bg-indigo-950 h-1.5 rounded-full transition-all duration-500" 
+            <div
+              className="bg-indigo-950 h-1.5 rounded-full transition-all duration-500"
               style={{ width: `${occupancyRate}%` }}
             ></div>
           </div>
@@ -189,7 +185,7 @@ export default function Dashboard({ routes, bookings, setActiveTab, setSelectedR
             {routes.map((r) => {
               const isFull = r.available_seats === 0;
               const isLow = !isFull && r.available_seats <= 5;
-              
+
               return (
                 <div key={r.route_id} className="py-3 flex items-center justify-between hover:bg-slate-50/80 px-2.5 rounded-xl transition-colors">
                   <div className="flex items-center space-x-3 min-w-0">
@@ -215,13 +211,12 @@ export default function Dashboard({ routes, bookings, setActiveTab, setSelectedR
                       <div className="text-xs font-semibold text-slate-700 sb-mono">
                         {r.available_seats} / {r.total_seats} seats
                       </div>
-                      <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                        isFull 
-                          ? 'bg-rose-50 text-rose-700 border border-rose-200' 
-                          : isLow 
-                          ? 'bg-amber-50 text-amber-700 border border-amber-200' 
+                      <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full ${isFull
+                        ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                        : isLow
+                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
                           : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                      }`}>
+                        }`}>
                         {isFull ? 'Full' : isLow ? 'Few left' : 'Available'}
                       </span>
                     </div>
@@ -232,11 +227,10 @@ export default function Dashboard({ routes, bookings, setActiveTab, setSelectedR
                         setActiveTab('book');
                       }}
                       disabled={isFull}
-                      className={`text-xs font-bold px-3.5 py-1.5 rounded-xl transition-all ${
-                        isFull
-                          ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                          : 'bg-indigo-950 text-white hover:bg-indigo-800 shadow-xs'
-                      }`}
+                      className={`text-xs font-bold px-3.5 py-1.5 rounded-xl transition-all ${isFull
+                        ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                        : 'bg-indigo-950 text-white hover:bg-indigo-800 shadow-xs'
+                        }`}
                     >
                       {isFull ? 'Full' : 'Book'}
                     </button>
@@ -286,11 +280,10 @@ export default function Dashboard({ routes, bookings, setActiveTab, setSelectedR
                       </div>
                     </div>
 
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
-                      b.status === 'Confirmed'
-                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        : 'bg-rose-50 text-rose-700 border border-rose-200'
-                    }`}>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${b.status === 'Confirmed'
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      : 'bg-rose-50 text-rose-700 border border-rose-200'
+                      }`}>
                       {b.status}
                     </span>
                   </div>
