@@ -1,0 +1,194 @@
+================================================================================
+SMART BUS TICKET BOOKING & RESERVATION SYSTEM — TEST CASES & VERIFICATION PLAN
+================================================================================
+Project: Smart Bus Booking Hackathon Project
+Environment: Python 3 Console Application & Standalone React Frontend
+Data Model: In-Memory Data Structures (Lists, Dictionaries, Sets, Tuples)
+
+--------------------------------------------------------------------------------
+TEST MATRIX
+--------------------------------------------------------------------------------
+
+[TC-01] View All Routes
+--------------------------------------------------------------------------------
+Description:     Verify that all initial starter routes are displayed with complete details.
+Action / Input:  Choose Option 1 (View Available Routes) from the main menu.
+Expected Result: All 5 initial routes appear with Route ID, Journey, Departure Time,
+                 Ticket Fare, and Available / Total seats:
+                 - R101: Karachi -> Hyderabad, 08:00 AM, Rs 1200, 40/40 seats
+                 - R102: Karachi -> Sukkur, 09:30 AM, Rs 2000, 36/36 seats
+                 - R103: Hyderabad -> Mirpur Khas, 11:00 AM, Rs 800, 32/32 seats
+                 - R104: Karachi -> Lahore, 07:00 PM, Rs 5000, 45/45 seats
+                 - R105: Sukkur -> Hyderabad, 02:00 PM, Rs 1500, 30/30 seats
+Rule Reference:  Feature 2, Feature 3
+Status / Notes:  [ ] Pass  [ ] Fail
+Actual Result:   
+
+
+[TC-02] Search for Existing City (Hyderabad)
+--------------------------------------------------------------------------------
+Description:     Verify case-insensitive search for routes involving Hyderabad.
+Action / Input:  Choose Option 2 (Search for a Route).
+                 Search term: "hyderabad" (lowercase)
+Expected Result: Returns all journeys departing from or arriving at Hyderabad:
+                 - R101 (Karachi -> Hyderabad)
+                 - R103 (Hyderabad -> Mirpur Khas)
+                 - R105 (Sukkur -> Hyderabad)
+                 Does not crash and returns to menu cleanly.
+Rule Reference:  Feature 4, Case-Insensitive String Matching
+Status / Notes:  [ ] Pass  [ ] Fail
+Actual Result:   
+
+
+[TC-03] Search for Unknown / Non-Existent City (Atlantis)
+--------------------------------------------------------------------------------
+Description:     Verify graceful handling when searching for an unknown destination.
+Action / Input:  Choose Option 2 (Search for a Route).
+                 Search term: "Atlantis"
+Expected Result: System displays a clear, helpful "No matching routes found" message.
+                 Program does not crash or throw unhandled exceptions.
+Rule Reference:  Feature 4, for-else construct
+Status / Notes:  [ ] Pass  [ ] Fail
+Actual Result:   
+
+
+[TC-04] Successfully Book Two Seats on R101 (Ahmed, Rs 2400)
+--------------------------------------------------------------------------------
+Description:     Verify end-to-end valid ticket reservation and seat decrement.
+Action / Input:  Choose Option 3 (Book a Ticket).
+                 Passenger Name: Ahmed
+                 Passenger Age:  24
+                 Route ID:       R101
+                 Seats:          2
+Expected Result: Booking confirmed successfully:
+                 - Unique Booking ID generated (e.g., B1001) and added to ID set
+                 - Total Fare calculated: 2 seats * Rs. 1200 = Rs. 2400
+                 - R101 available seats decrements from 40 to 38
+                 - Record added to bookings list with status "Confirmed"
+Rule Reference:  BR-01, BR-02, BR-03, BR-04, BR-05, BR-06, BR-07, BR-08
+Status / Notes:  [ ] Pass  [ ] Fail
+Actual Result:   
+
+
+[TC-05] Reject Zero or Negative Seats
+--------------------------------------------------------------------------------
+Description:     Verify boundary validation for zero or negative seat quantity.
+Action / Input:  Choose Option 3 (Book a Ticket).
+                 Passenger Name: Sara
+                 Passenger Age:  28
+                 Route ID:       R102
+                 Seats:          0 (and in another test, -2)
+Expected Result: System rejects booking with an error message: "Seat quantity must be
+                 a positive integer greater than zero."
+                 No booking record is created, and R102 seat count remains unchanged.
+Rule Reference:  BR-04
+Status / Notes:  [ ] Pass  [ ] Fail
+Actual Result:   
+
+
+[TC-06] Reject Booking More Seats Than Available
+--------------------------------------------------------------------------------
+Description:     Verify overbooking protection when requested seats exceed capacity.
+Action / Input:  Choose Option 3 (Book a Ticket).
+                 Passenger Name: Usman
+                 Passenger Age:  30
+                 Route ID:       R105 (available seats: 30)
+                 Seats:          35
+Expected Result: System rejects booking with an error: "Requested seats exceed available
+                 capacity (Available: 30)."
+                 No record is created, and available seats remain 30 (never becomes negative).
+Rule Reference:  BR-05, BR-13
+Status / Notes:  [ ] Pass  [ ] Fail
+Actual Result:   
+
+
+[TC-07] Cancel a Confirmed Booking and Restore Seats
+--------------------------------------------------------------------------------
+Description:     Verify cancelling an active booking restores seats back to the route.
+Action / Input:  Ensure booking B1001 (from TC-04 on R101 for 2 seats) exists.
+                 Choose Option 5 (Cancel a Booking).
+                 Enter Booking ID: B1001
+Expected Result: Confirmation message appears:
+                 - Booking B1001 status changed to "Cancelled"
+                 - 2 seats restored to R101 (available seats increase from 38 back to 40)
+                 - Booking record is retained in history (not deleted)
+Rule Reference:  BR-09, BR-10, BR-11
+Status / Notes:  [ ] Pass  [ ] Fail
+Actual Result:   
+
+
+[TC-08] Prevent Double Cancellation From Restoring Seats Again
+--------------------------------------------------------------------------------
+Description:     Verify that cancelling an already cancelled booking is rejected.
+Action / Input:  Choose Option 5 (Cancel a Booking).
+                 Enter Booking ID: B1001 (already cancelled in TC-07).
+Expected Result: System rejects cancellation: "Booking B1001 is already Cancelled."
+                 Seats are NOT restored a second time.
+                 R101 available seats remain unchanged at 40.
+Rule Reference:  BR-09, BR-10
+Status / Notes:  [ ] Pass  [ ] Fail
+Actual Result:   
+
+
+[TC-09] Verify Empty Reports Show Zero Counts and Revenue
+--------------------------------------------------------------------------------
+Description:     Verify report generation on a fresh session with zero bookings.
+Action / Input:  Start application with clean in-memory state (bookings list empty).
+                 Choose Option 7 (Generate Booking Report).
+Expected Result: Output shows:
+                 - Total bookings created: 0
+                 - Confirmed bookings:     0
+                 - Cancelled bookings:     0
+                 - Seats currently reserved: 0
+                 - Confirmed revenue:      Rs. 0
+                 - Fully booked routes:    0
+                 Program handles empty list safely without division by zero or errors.
+Rule Reference:  BR-12, BR-15, Feature 9
+Status / Notes:  [ ] Pass  [ ] Fail
+Actual Result:   
+
+
+[TC-10] Verify Fully Booked Routes Are Reported Correctly
+--------------------------------------------------------------------------------
+Description:     Verify route status changes to 'Fully Booked' when available seats reach 0.
+Action / Input:  Book all 30 remaining seats on R105.
+                 Inspect Option 1 (Available Routes), Option 6 (Seat Availability),
+                 and Option 7 (Generate Booking Report).
+Expected Result: - R105 available seats = 0
+                 - Status marked as "Fully Booked"
+                 - Route report increments "Fully booked routes" counter by 1
+Rule Reference:  Feature 3, Feature 8, Feature 9
+Status / Notes:  [ ] Pass  [ ] Fail
+Actual Result:   
+
+
+[TC-11] Verify Cancelled Bookings Are Excluded From Revenue
+--------------------------------------------------------------------------------
+Description:     Confirm that cancelled booking fares are not counted in confirmed revenue.
+Action / Input:  Book 2 seats on R102 (2 * Rs. 2000 = Rs. 4000).
+                 Book 1 seat on R103 (1 * Rs. 800 = Rs. 800).
+                 Cancel the R102 booking.
+                 Generate Booking Report (Option 7).
+Expected Result: - Total bookings created: 2
+                 - Confirmed bookings:     1
+                 - Cancelled bookings:     1
+                 - Seats currently reserved: 1 (R103)
+                 - Confirmed revenue:      Rs. 800 (Rs. 4000 cancelled fare is EXCLUDED)
+Rule Reference:  BR-12
+Status / Notes:  [ ] Pass  [ ] Fail
+Actual Result:   
+
+
+[TC-12] Invalid Menu Input Handling
+--------------------------------------------------------------------------------
+Description:     Verify that non-numeric or out-of-range menu inputs do not crash the app.
+Action / Input:  At the main menu prompt, enter "abc", then "-1", then "99".
+Expected Result: System displays a friendly error: "Invalid choice! Please select 1-9."
+                 Main menu redisplays and loop continues.
+Rule Reference:  BR-14, Feature 1
+Status / Notes:  [ ] Pass  [ ] Fail
+Actual Result:   
+
+================================================================================
+END OF TEST CASES
+================================================================================

@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(150)
+  email      String    @unique @db.VarChar(150)
+  password   String    @db.VarChar(255)
+  role       String    @default("user") @db.VarChar(20)
+  created_at DateTime  @default(now())
+  bookings   Booking[]
+
+  @@map("users")
+}
+
+model Route {
+  route_id         String    @id @db.VarChar(10)
+  departure_city   String    @db.VarChar(100)
+  destination_city String    @db.VarChar(100)
+  departure_time   String    @db.VarChar(50)
+  ticket_price     Int
+  total_seats      Int
+  available_seats  Int
+  created_at       DateTime  @default(now())
+  bookings         Booking[]
+
+  @@map("routes")
+}
+
+model Booking {
+  booking_id     String   @id @db.VarChar(20)
+  user_id        Int?
+  user_email     String?  @db.VarChar(150)
+  passenger_name String   @db.VarChar(150)
+  passenger_age  Int
+  route_id       String   @db.VarChar(10)
+  seats          Int
+  total_fare     Int
+  status         String   @default("Confirmed") @db.VarChar(20)
+  timestamp      String   @db.VarChar(50)
+  created_at     DateTime @default(now())
+
+  user  User?  @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  route Route  @relation(fields: [route_id], references: [route_id], onDelete: Cascade)
+
+  @@map("bookings")
+}
