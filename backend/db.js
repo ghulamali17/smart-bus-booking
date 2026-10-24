@@ -27,12 +27,14 @@ export async function initDB() {
             email: 'admin@smartbus.com',
             password: adminHash,
             role: 'admin',
+            balance: 10000,
           },
           {
             name: 'Ali Khan',
             email: 'user@smartbus.com',
             password: userHash,
             role: 'user',
+            balance: 10000,
           },
         ],
       });

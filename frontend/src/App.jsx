@@ -22,7 +22,7 @@ import {
 } from './api';
 
 function MainApp() {
-  const { user, isAdmin, loading: authLoading } = useAuth();
+  const { user, isAdmin, loading: authLoading, refreshUser } = useAuth();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showAuthModal, setShowAuthModal] = useState(false);
   
@@ -82,6 +82,7 @@ function MainApp() {
       })
     );
     loadRoutesAndBookings();
+    if (refreshUser) refreshUser();
     return newBookingRecord;
   };
 
@@ -94,6 +95,7 @@ function MainApp() {
 
     await apiCancelBooking(bookingId);
     await loadRoutesAndBookings();
+    if (refreshUser) refreshUser();
     return targetBooking;
   };
 
@@ -101,6 +103,7 @@ function MainApp() {
   const handleResetBookings = async () => {
     await apiResetBookings();
     await loadRoutesAndBookings();
+    if (refreshUser) refreshUser();
   };
 
   return (
@@ -190,7 +193,7 @@ function MainApp() {
               />
             )}
 
-            {activeTab === 'reports' && (
+            {activeTab === 'reports' && isAdmin && (
               <BookingReports 
                 routes={routes} 
                 bookings={bookings} 

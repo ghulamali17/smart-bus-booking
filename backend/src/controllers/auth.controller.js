@@ -40,6 +40,7 @@ export async function register(req, res) {
         name: true,
         email: true,
         role: true,
+        balance: true,
         created_at: true,
       },
     });
@@ -88,7 +89,7 @@ export async function login(req, res) {
 
     return res.json({
       token,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role },
+      user: { id: user.id, name: user.name, email: user.email, role: user.role, balance: user.balance },
     });
   } catch (err) {
     console.error('Login error:', err);
@@ -105,7 +106,7 @@ export async function getMe(req, res) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
-      select: { id: true, name: true, email: true, role: true, created_at: true },
+      select: { id: true, name: true, email: true, role: true, balance: true, created_at: true },
     });
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });

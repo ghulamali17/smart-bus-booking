@@ -10,14 +10,19 @@ import {
   Clock,
   MapPin,
   Calendar,
-  Sparkles
+  Sparkles,
+  Wallet,
+  CreditCard
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 export default function Dashboard({ routes, bookings, setActiveTab, setSelectedRouteId }) {
+  const { user, isAdmin } = useAuth();
+
   const confirmedBookings = bookings.filter(b => b.status === 'Confirmed');
   const cancelledBookings = bookings.filter(b => b.status === 'Cancelled');
 
-  const totalRevenue = confirmedBookings.reduce((sum, b) => sum + b.total_fare, 0);
+  const totalAmount = confirmedBookings.reduce((sum, b) => sum + b.total_fare, 0);
   const totalSeatsCapacity = routes.reduce((sum, r) => sum + r.total_seats, 0);
   const totalSeatsAvailable = routes.reduce((sum, r) => sum + r.available_seats, 0);
   const totalReservedSeats = confirmedBookings.reduce((sum, b) => sum + b.seats, 0);
@@ -25,6 +30,8 @@ export default function Dashboard({ routes, bookings, setActiveTab, setSelectedR
   const occupancyRate = totalSeatsCapacity > 0
     ? Math.round(((totalSeatsCapacity - totalSeatsAvailable) / totalSeatsCapacity) * 100)
     : 0;
+
+  const userBalance = user?.balance ?? 10000;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-200">
@@ -42,6 +49,11 @@ export default function Dashboard({ routes, bookings, setActiveTab, setSelectedR
         />
 
         <div className="relative z-10 max-w-2xl">
+          {/* User Status / Wallet Pill */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-amber-300 border border-white/10 text-xs font-semibold backdrop-blur-md mb-3.5">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>{isAdmin ? 'System Administrator Console' : `Passenger Hub • Wallet Balance: Rs. ${userBalance.toLocaleString()}`}</span>
+          </div>
 
           <h1 className="sb-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight">
             Welcome to SmartBus Express
@@ -82,7 +94,7 @@ export default function Dashboard({ routes, bookings, setActiveTab, setSelectedR
       </div>
 
       {/* ===================================================================== */}
-      {/* 2. SUMMARY METRIC STRIP (Tabular Numbers & Clean Cards)               */}
+      {/* 2. SUMMARY METRIC STRIP (Role-Aware Cards)                            */}
       {/* ===================================================================== */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Active Routes */}
@@ -102,10 +114,12 @@ export default function Dashboard({ routes, bookings, setActiveTab, setSelectedR
           <p className="mt-1 text-xs text-slate-500">5 Regional Hubs</p>
         </div>
 
-        {/* Card 2: Confirmed Bookings */}
+        {/* Card 2: Bookings */}
         <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Confirmed Bookings</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              {isAdmin ? 'Confirmed Bookings' : 'My Bookings'}
+            </span>
             <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
               <CheckCircle2 className="h-4 w-4" />
             </span>
@@ -113,52 +127,92 @@ export default function Dashboard({ routes, bookings, setActiveTab, setSelectedR
           <div className="mt-3 flex items-baseline justify-between">
             <span className="sb-display text-3xl font-bold text-indigo-950">{confirmedBookings.length}</span>
             <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
-              {totalReservedSeats} seats
+              {totalReservedSeats} seat{totalReservedSeats === 1 ? '' : 's'}
             </span>
           </div>
           <p className="mt-1 text-xs text-slate-500">{cancelledBookings.length} cancelled</p>
         </div>
 
-        {/* Card 3: Seat Occupancy */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Fleet Occupancy</span>
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
-              <Ticket className="h-4 w-4" />
-            </span>
+        {/* Card 3: Fleet Occupancy (Admin) OR Wallet Balance (User) */}
+        {isAdmin ? (
+          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Fleet Occupancy</span>
+              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
+                <Ticket className="h-4 w-4" />
+              </span>
+            </div>
+            <div className="mt-3 flex items-baseline justify-between">
+              <span className="sb-display text-3xl font-bold text-indigo-950">{occupancyRate}%</span>
+              <span className="text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">
+                {totalSeatsAvailable} free
+              </span>
+            </div>
+            <div className="mt-2.5 w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+              <div
+                className="bg-indigo-950 h-1.5 rounded-full transition-all duration-500"
+                style={{ width: `${occupancyRate}%` }}
+              ></div>
+            </div>
           </div>
-          <div className="mt-3 flex items-baseline justify-between">
-            <span className="sb-display text-3xl font-bold text-indigo-950">{occupancyRate}%</span>
-            <span className="text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">
-              {totalSeatsAvailable} free
-            </span>
+        ) : (
+          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Wallet Balance</span>
+              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+                <Wallet className="h-4 w-4" />
+              </span>
+            </div>
+            <div className="mt-3 flex items-baseline justify-between">
+              <span className="sb-display text-2xl sm:text-3xl font-bold text-indigo-950">
+                Rs. {userBalance.toLocaleString()}
+              </span>
+              <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                Available
+              </span>
+            </div>
+            <p className="mt-1 text-xs text-slate-500">Credit: Rs. 10,000</p>
           </div>
-          <div className="mt-2.5 w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-            <div
-              className="bg-indigo-950 h-1.5 rounded-full transition-all duration-500"
-              style={{ width: `${occupancyRate}%` }}
-            ></div>
-          </div>
-        </div>
+        )}
 
-        {/* Card 4: Confirmed Revenue */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Confirmed Revenue</span>
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
-              <TrendingUp className="h-4 w-4" />
-            </span>
+        {/* Card 4: Confirmed Revenue (Admin) OR Total Money Spent (User) */}
+        {isAdmin ? (
+          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Confirmed Revenue</span>
+              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+                <TrendingUp className="h-4 w-4" />
+              </span>
+            </div>
+            <div className="mt-3 flex items-baseline justify-between">
+              <span className="sb-display text-2xl font-bold text-indigo-950">
+                Rs. {totalAmount.toLocaleString()}
+              </span>
+              <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
+                Net
+              </span>
+            </div>
+            <p className="mt-1 text-xs text-slate-500">Excludes cancelled trips</p>
           </div>
-          <div className="mt-3 flex items-baseline justify-between">
-            <span className="sb-display text-2xl font-bold text-indigo-950">
-              Rs. {totalRevenue.toLocaleString()}
-            </span>
-            <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
-              Net
-            </span>
+        ) : (
+          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Money Spent</span>
+              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700">
+                <CreditCard className="h-4 w-4" />
+              </span>
+            </div>
+            <div className="mt-3 flex items-baseline justify-between">
+              <span className="sb-display text-2xl font-bold text-indigo-950">
+                Rs. {totalAmount.toLocaleString()}
+              </span>
+              <span className="text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200">
+                Paid
+              </span>
+            </div>
+            <p className="mt-1 text-xs text-slate-500">Excludes cancelled trips</p>
           </div>
-          <p className="mt-1 text-xs text-slate-500">Excludes cancelled trips</p>
-        </div>
+        )}
       </div>
 
       {/* ===================================================================== */}

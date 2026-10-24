@@ -44,6 +44,16 @@ export function AuthProvider({ children }) {
     return res.user;
   };
 
+  const refreshUser = async () => {
+    try {
+      const profile = await apiGetMe();
+      setUser(profile);
+      return profile;
+    } catch (err) {
+      console.warn('Failed to refresh user profile:', err);
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem('smartbus_token');
     setToken(null);
@@ -59,6 +69,7 @@ export function AuthProvider({ children }) {
         login,
         register,
         logout,
+        refreshUser,
         isAdmin: user?.role === 'admin',
       }}
     >

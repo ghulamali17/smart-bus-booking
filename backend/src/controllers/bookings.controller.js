@@ -75,6 +75,21 @@ export async function bookTicket(req, res) {
       const bookingId = `B${1001 + count}`;
       const totalFare = route.ticket_price * seatsNum;
 
+      if (user && user.id) {
+        const dbUser = await tx.user.findUnique({ where: { id: user.id } });
+        if (dbUser && dbUser.balance < totalFare) {
+          const err = new Error(`Insufficient wallet balance (Rs. ${dbUser.balance.toLocaleString()}). Ticket fare is Rs. ${totalFare.toLocaleString()}.`);
+          err.status = 400;
+          throw err;
+        }
+        if (dbUser) {
+          await tx.user.update({
+            where: { id: user.id },
+            data: { balance: { decrement: totalFare } },
+          });
+        }
+      }
+
       await tx.route.update({
         where: { route_id: route.route_id },
         data: { available_seats: route.available_seats - seatsNum },
@@ -139,6 +154,13 @@ export async function cancelBooking(req, res) {
         data: { available_seats: { increment: booking.seats } },
       });
 
+      if (booking.user_id) {
+        await tx.user.update({
+          where: { id: booking.user_id },
+          data: { balance: { increment: booking.total_fare } },
+        });
+      }
+
       const updated = await tx.booking.update({
         where: { booking_id: bookingId },
         data: { status: 'Cancelled' },
@@ -149,7 +171,7 @@ export async function cancelBooking(req, res) {
 
     return res.json({
       success: true,
-      message: `Booking ${bookingId} has been cancelled and ${updatedBooking.seats} seat(s) restored.`,
+      message: `Booking ${bookingId} has been cancelled, ${updatedBooking.seats} seat(s) restored, and Rs. ${updatedBooking.total_fare} refunded to wallet.`,
       booking: updatedBooking,
     });
   } catch (err) {
@@ -163,6 +185,7 @@ export async function resetBookings(req, res) {
   try {
     await prisma.$transaction(async (tx) => {
       await tx.booking.deleteMany();
+      await tx.user.updateMany({ data: { balance: 10000 } });
       const allRoutes = await tx.route.findMany();
       for (const r of allRoutes) {
         await tx.route.update({
@@ -171,7 +194,7 @@ export async function resetBookings(req, res) {
         });
       }
     });
-    return res.json({ success: true, message: 'All bookings cleared and route seats reset.' });
+    return res.json({ success: true, message: 'All bookings cleared, route seats reset, and user balances restored.' });
   } catch (err) {
     console.error('Reset bookings error:', err);
     return res.status(500).json({ error: err.message || 'Database reset failed.' });

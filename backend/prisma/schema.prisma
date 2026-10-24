@@ -13,6 +13,7 @@ model User {
   email      String    @unique @db.VarChar(150)
   password   String    @db.VarChar(255)
   role       String    @default("user") @db.VarChar(20)
+  balance    Int       @default(10000)
   created_at DateTime  @default(now())
   bookings   Booking[]
 

@@ -10,7 +10,8 @@ import {
   ShieldAlert,
   Coins,
   RefreshCw,
-  Download
+  Download,
+  Wallet
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { downloadTicket } from '../utils/ticketGenerator';
@@ -86,6 +87,12 @@ export default function BookTicket({
     } else if (selectedRoute && seatsNum > selectedRoute.available_seats) {
       // 5. Overbooking validation (BR-05, TC-06)
       newErrors.seats = `Cannot book ${seatsNum} seats! Only ${selectedRoute.available_seats} seat${selectedRoute.available_seats === 1 ? '' : 's'} available on ${selectedRoute.route_id}.`;
+    }
+
+    // 6. Wallet balance validation
+    const totalFareRequired = ticketPrice * seatsNum;
+    if (user && (user.balance ?? 10000) < totalFareRequired) {
+      newErrors.form = `Insufficient wallet balance (Rs. ${(user.balance ?? 10000).toLocaleString()}). Required total fare is Rs. ${totalFareRequired.toLocaleString()}.`;
     }
 
     setErrors(newErrors);
@@ -430,6 +437,22 @@ export default function BookTicket({
 
               <span className="text-[11px] font-bold text-emerald-300 bg-emerald-950/60 border border-emerald-500/30 px-3 py-1 rounded-full">
                 All taxes included
+              </span>
+            </div>
+
+            {/* Wallet Balance Preview */}
+            <div className="relative z-10 pt-2.5 mt-3 border-t border-white/10 flex items-center justify-between text-xs">
+              <span className="flex items-center space-x-1.5 text-indigo-200">
+                <Wallet className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Your Wallet Balance:</span>
+              </span>
+              <span className={`font-bold ${
+                (user?.balance ?? 10000) < calculatedFare ? 'text-rose-400' : 'text-emerald-300'
+              }`}>
+                Rs. {(user?.balance ?? 10000).toLocaleString()}
+                {(user?.balance ?? 10000) < calculatedFare && (
+                  <span className="ml-1 text-[10px] text-rose-300 font-normal">(Insufficient)</span>
+                )}
               </span>
             </div>
           </div>

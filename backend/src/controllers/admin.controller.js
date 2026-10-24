@@ -64,7 +64,7 @@ export async function getAdminStats(req, res) {
 export async function getAdminUsers(req, res) {
   try {
     const users = await prisma.user.findMany({
-      select: { id: true, name: true, email: true, role: true, created_at: true },
+      select: { id: true, name: true, email: true, role: true, balance: true, created_at: true },
       orderBy: { id: 'asc' },
     });
     return res.json(users);

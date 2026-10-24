@@ -14,7 +14,8 @@ import {
   User,
   LogOut,
   LogIn,
-  Sparkles
+  Sparkles,
+  Wallet
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -29,11 +30,11 @@ export default function Navbar({ activeTab, setActiveTab, onOpenAuth }) {
     { id: 'my-bookings', label: 'My Bookings', icon: BookMarked },
     { id: 'cancel', label: 'Cancel Booking', icon: Ban },
     { id: 'availability', label: 'Seat Availability', icon: PieChart },
-    { id: 'reports', label: 'Reports', icon: BarChart3 },
     { id: 'schedule', label: 'City Schedule', icon: CalendarClock },
   ];
 
   if (isAdmin) {
+    navItems.push({ id: 'reports', label: 'Financial Reports', icon: BarChart3, isAdminOnly: true });
     navItems.push({ id: 'admin', label: 'Admin Panel', icon: ShieldCheck, isAdminOnly: true });
   }
 
@@ -64,7 +65,16 @@ export default function Navbar({ activeTab, setActiveTab, onOpenAuth }) {
           {/* Right Header: User Profile or Sign In CTA */}
           <div className="flex items-center space-x-3">
             {user ? (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2.5">
+                {/* User Wallet Balance Pill */}
+                <div 
+                  className="flex items-center space-x-1.5 bg-emerald-50 text-emerald-900 border border-emerald-200 py-1.5 px-3 rounded-xl text-xs font-bold shadow-2xs"
+                  title="Your Available Wallet Balance (Default Rs. 10,000)"
+                >
+                  <Wallet className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>Rs. {(user.balance ?? 10000).toLocaleString()}</span>
+                </div>
+
                 <div className="flex items-center space-x-2 bg-slate-50 border border-slate-200 py-1 px-2.5 rounded-xl">
                   <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold ${
                     isAdmin ? 'bg-indigo-950 text-amber-300' : 'bg-indigo-950 text-white'
