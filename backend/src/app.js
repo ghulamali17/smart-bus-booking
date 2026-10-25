@@ -5,8 +5,14 @@ import { isDbConnected } from '../db.js';
 
 const app = express();
 
-// Standard middleware
-app.use(cors());
+// CORS and preflight handling
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
+}));
+app.options('*', cors());
+
 app.use(express.json());
 
 // Root welcome endpoint
