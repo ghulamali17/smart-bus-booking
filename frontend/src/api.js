@@ -1,6 +1,12 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL 
-  ? `${import.meta.env.VITE_API_URL.replace(/\/+$/, '')}/api`
-  : (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api');
+const getApiBaseUrl = () => {
+  if (import.meta.env.VITE_API_URL) {
+    const raw = import.meta.env.VITE_API_URL.trim().replace(/\/+$/, '');
+    return raw.endsWith('/api') ? raw : `${raw}/api`;
+  }
+  return import.meta.env.PROD ? '/api' : 'http://localhost:5000/api';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 // Helper to get auth headers
 function getAuthHeaders() {

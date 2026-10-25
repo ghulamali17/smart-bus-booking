@@ -9,8 +9,25 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Root welcome endpoint
+app.get('/', (req, res) => {
+  res.json({
+    name: 'Smart Bus Booking API',
+    status: 'online',
+    documentation: 'All API routes are prefixed under /api',
+    endpoints: {
+      health: '/api/health',
+      routes: '/api/routes',
+      bookings: '/api/bookings',
+      auth: '/api/auth/login',
+      users: '/api/users (Protected: Admin token required)',
+      finance: '/api/finance (Protected: Admin token required)',
+    },
+  });
+});
+
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+app.get(['/health', '/api/health'], (req, res) => {
   res.json({
     status: 'ok',
     orm: 'Prisma ORM',
