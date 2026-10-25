@@ -1,9 +1,34 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
-export const prisma = new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['warn', 'error'] : ['error'],
-});
+// Auto-sanitize Supabase PgBouncer / Transaction Pooler URLs to prevent 42P05 ("prepared statement already exists")
+function getSanitizedDatabaseUrl() {
+  const url = process.env.DATABASE_URL;
+  if (!url) return undefined;
+
+  // Supabase PgBouncer / Supavisor transaction pooler on port 6543 requires pgbouncer=true
+  if (url.includes(':6543') || url.includes('pooler.supabase.com:6543')) {
+    if (!url.includes('pgbouncer=true')) {
+      const sep = url.includes('?') ? '&' : '?';
+      return `${url}${sep}pgbouncer=true&connection_limit=1`;
+    }
+  }
+  return url;
+}
+
+const dbUrl = getSanitizedDatabaseUrl();
+const globalForPrisma = globalThis;
+
+export const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    datasources: dbUrl ? { db: { url: dbUrl } } : undefined,
+    log: process.env.NODE_ENV === 'development' ? ['warn', 'error'] : ['error'],
+  });
+
+if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+  globalForPrisma.prisma = prisma;
+}
 
 export let isDbConnected = false;
 
