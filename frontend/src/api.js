@@ -1,9 +1,12 @@
 const getApiBaseUrl = () => {
-  if (import.meta.env.VITE_API_URL) {
-    const raw = import.meta.env.VITE_API_URL.trim().replace(/\/+$/, '');
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl && !envUrl.includes('your-backend-deployment')) {
+    const raw = envUrl.trim().replace(/\/+$/, '');
     return raw.endsWith('/api') ? raw : `${raw}/api`;
   }
-  return import.meta.env.PROD ? '/api' : 'http://localhost:5000/api';
+  return import.meta.env.PROD
+    ? 'https://smart-bus-booking-wine.vercel.app/api'
+    : 'http://localhost:5000/api';
 };
 
 const API_BASE_URL = getApiBaseUrl();
