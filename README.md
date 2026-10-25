@@ -1,6 +1,23 @@
 # SmartBus Express — Intercity Bus Reservation System
 
-SmartBus Express is an intercity bus booking and reservation management platform. The project provides an end-to-end digital travel experience, comprising a modern **React + Vite** frontend, a **Node.js + Express** REST API powered by **Prisma ORM** and **PostgreSQL**, and a standalone **Python 3 CLI** application implementing core reservation logic.
+> **A full-stack, cloud-hosted bus reservation portal alongside an independent Python console application.**
+
+---
+
+### 🚀 Technology Stack & Cloud Infrastructure
+
+| Layer | Technology | Hosting / Deployment |
+|---|---|---|
+| **Frontend** | **React 18**, Vite, Tailwind CSS, Lucide Icons | Hosted on **[Vercel](https://vercel.com)** |
+| **Backend** | **Node.js**, Express, Prisma ORM, JWT Authentication | Hosted on **[Vercel](https://vercel.com)** (Serverless) |
+| **Database** | **PostgreSQL** | Hosted on **[Supabase](https://supabase.com)** (Connection Pooler) |
+| **Console App** | **Python 3** (Pure Python CLI, zero dependencies) | Run locally via [`python/main.py`](file:///d:/smart-bus-booking/python/main.py) |
+
+> 💻 **Console-Based Application:**  
+> To run and test the standalone terminal-based reservation system, check out [`python/main.py`](file:///d:/smart-bus-booking/python/main.py):
+> ```bash
+> python python/main.py
+> ```
 
 ---
 
