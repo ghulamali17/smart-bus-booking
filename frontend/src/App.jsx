@@ -60,6 +60,15 @@ function MainApp() {
     loadRoutesAndBookings();
   }, [user]);
 
+  // Ensure Admin only visits admin management views ('admin' or 'reports')
+  useEffect(() => {
+    if (isAdmin && !['admin', 'reports'].includes(activeTab)) {
+      setActiveTab('admin');
+    } else if (!isAdmin && ['admin', 'reports'].includes(activeTab)) {
+      setActiveTab('dashboard');
+    }
+  }, [isAdmin]);
+
   // Handle Ticket Booking (Authoritative Backend)
   const handleBookSuccess = async ({ passengerName, passengerAge, routeId, seats, totalFare }) => {
     const newBookingRecord = await apiBookTicket({

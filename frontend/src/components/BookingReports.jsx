@@ -100,7 +100,9 @@ export default function BookingReports({ routes, bookings }) {
         <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs">
           <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Fully Booked</span>
           <div className="mt-1.5 sb-display text-2xl font-bold text-indigo-950">{fullyBookedRoutesCount}</div>
-          <span className="text-[11px] text-slate-500 mt-0.5 block">0 seats free</span>
+          <span className="text-[11px] text-slate-500 mt-0.5 block">
+            {fullyBookedRoutesCount === 0 ? '0 sold-out routes' : `${fullyBookedRoutesCount} sold-out route${fullyBookedRoutesCount === 1 ? '' : 's'}`}
+          </span>
         </div>
       </div>
 
