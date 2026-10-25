@@ -562,10 +562,10 @@ export default function AdminDashboard({ routes, setRoutes, onRefreshRoutes }) {
       {/* ===================================================================== */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
-            <div className="bg-indigo-950 p-5 text-white flex items-center justify-between border-b border-white/10">
+          <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden max-h-[92vh] flex flex-col">
+            <div className="bg-indigo-950 p-5 text-white flex items-center justify-between border-b border-white/10 shrink-0">
               <div className="flex items-center space-x-2.5">
-                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-300 text-indigo-950 font-bold">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-300 text-indigo-950 font-bold shrink-0">
                   <Bus className="h-4 w-4" />
                 </span>
                 <div>
@@ -573,13 +573,13 @@ export default function AdminDashboard({ routes, setRoutes, onRefreshRoutes }) {
                   <p className="text-[11px] text-indigo-200 mt-0.5">Register a new scheduled journey into the route catalog</p>
                 </div>
               </div>
-              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-white">
+              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-white p-1">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleAddRoute} className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleAddRoute} className="p-5 sm:p-6 space-y-4 overflow-y-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Route ID *</label>
                   <input
@@ -604,7 +604,7 @@ export default function AdminDashboard({ routes, setRoutes, onRefreshRoutes }) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Departure City *</label>
                   <input
@@ -629,7 +629,7 @@ export default function AdminDashboard({ routes, setRoutes, onRefreshRoutes }) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Ticket Price (Rs) *</label>
                   <input
@@ -681,10 +681,10 @@ export default function AdminDashboard({ routes, setRoutes, onRefreshRoutes }) {
       {/* ===================================================================== */}
       {editingRoute && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
-            <div className="bg-indigo-950 p-5 text-white flex items-center justify-between border-b border-white/10">
+          <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden max-h-[92vh] flex flex-col">
+            <div className="bg-indigo-950 p-5 text-white flex items-center justify-between border-b border-white/10 shrink-0">
               <div className="flex items-center space-x-2.5">
-                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-300 text-indigo-950 font-bold">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-300 text-indigo-950 font-bold shrink-0">
                   <Edit3 className="h-4 w-4" />
                 </span>
                 <div>
@@ -692,13 +692,13 @@ export default function AdminDashboard({ routes, setRoutes, onRefreshRoutes }) {
                   <p className="text-[11px] text-indigo-200 mt-0.5">Modify timings, pricing, or seat capacities</p>
                 </div>
               </div>
-              <button onClick={() => setEditingRoute(null)} className="text-slate-400 hover:text-white">
+              <button onClick={() => setEditingRoute(null)} className="text-slate-400 hover:text-white p-1">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleUpdateRoute} className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleUpdateRoute} className="p-5 sm:p-6 space-y-4 overflow-y-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Departure City</label>
                   <input

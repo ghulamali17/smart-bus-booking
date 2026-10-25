@@ -226,7 +226,7 @@ export default function MyBookings({
                     </div>
 
                     {isConfirmed ? (
-                      <div className="mt-2.5 flex items-center space-x-2">
+                      <div className="mt-2.5 flex flex-wrap items-center gap-1.5 sm:gap-2">
                         <button
                           onClick={() => downloadTicket(b, route)}
                           className="inline-flex items-center px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-indigo-950 hover:bg-indigo-800 shadow-xs transition-colors"

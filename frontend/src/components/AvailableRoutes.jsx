@@ -32,11 +32,11 @@ export default function AvailableRoutes({ routes, setActiveTab, setSelectedRoute
           </p>
         </div>
 
-        <div className="flex items-center space-x-3 self-start sm:self-auto">
+        <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-auto">
           {/* Filter toggle */}
           <button
             onClick={() => setFilterAvailableOnly(!filterAvailableOnly)}
-            className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold border transition-all ${
+            className={`flex items-center space-x-2 px-3 sm:px-3.5 py-2 rounded-xl text-xs font-bold border transition-all whitespace-nowrap ${
               filterAvailableOnly
                 ? 'bg-indigo-950 text-white border-indigo-950 shadow-sm'
                 : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'

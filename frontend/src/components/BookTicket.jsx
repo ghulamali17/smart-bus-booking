@@ -276,14 +276,14 @@ export default function BookTicket({
 
             {/* Selected Route Highlights */}
             {selectedRoute && (
-              <div className="mt-3 p-3 bg-indigo-50/60 rounded-xl border border-indigo-100 flex items-center justify-between text-xs">
-                <div className="flex items-center space-x-2 text-indigo-900 font-semibold">
-                  <MapPin className="w-4 h-4 text-indigo-600" />
+              <div className="mt-3 p-3 bg-indigo-50/60 rounded-xl border border-indigo-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                <div className="flex flex-wrap items-center gap-1.5 text-indigo-900 font-semibold">
+                  <MapPin className="w-4 h-4 text-indigo-600 shrink-0" />
                   <span>{selectedRoute.departure_city} to {selectedRoute.destination_city}</span>
                   <span className="text-indigo-400">•</span>
                   <span>{selectedRoute.departure_time}</span>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center justify-between sm:justify-end space-x-3 w-full sm:w-auto pt-1 sm:pt-0 border-t sm:border-t-0 border-indigo-100/60">
                   <span className="text-slate-600">
                     Remaining: <strong className="text-indigo-900">{selectedRoute.available_seats}</strong> / {selectedRoute.total_seats}
                   </span>

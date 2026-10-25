@@ -63,24 +63,24 @@ export default function Dashboard({ routes, bookings, setActiveTab, setSelectedR
             Reserve intercity seats across Karachi, Hyderabad, Sukkur, Mirpur Khas, and Lahore with real-time seat availability and instant PDF boarding pass downloads.
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-col sm:flex-row flex-wrap gap-2.5 sm:gap-3">
             <button
               onClick={() => setActiveTab('book')}
-              className="inline-flex items-center gap-2 rounded-xl bg-amber-300 px-5 py-2.5 text-xs sm:text-sm font-bold text-indigo-950 shadow-md shadow-black/20 transition hover:bg-amber-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-amber-300 px-5 py-2.5 text-xs sm:text-sm font-bold text-indigo-950 shadow-md shadow-black/20 transition hover:bg-amber-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
             >
               <Ticket className="h-4 w-4" />
               <span>Book Ticket Now</span>
             </button>
             <button
               onClick={() => setActiveTab('search')}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white transition hover:bg-white/10 focus:outline-none"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white transition hover:bg-white/10 focus:outline-none"
             >
               <Search className="h-4 w-4 text-indigo-200" />
               <span>Search Routes</span>
             </button>
             <button
               onClick={() => setActiveTab('my-bookings')}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs sm:text-sm font-semibold text-indigo-200 transition hover:bg-white/10 focus:outline-none"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs sm:text-sm font-semibold text-indigo-200 transition hover:bg-white/10 focus:outline-none"
             >
               <span>My Bookings ({bookings.length})</span>
             </button>
@@ -96,55 +96,55 @@ export default function Dashboard({ routes, bookings, setActiveTab, setSelectedR
       {/* ===================================================================== */}
       {/* 2. SUMMARY METRIC STRIP (Role-Aware Cards)                            */}
       {/* ===================================================================== */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* Card 1: Active Routes */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
+        <div className="bg-white rounded-2xl p-3.5 sm:p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Scheduled Routes</span>
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700">
-              <Bus className="h-4 w-4" />
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">Scheduled Routes</span>
+            <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700">
+              <Bus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </span>
           </div>
-          <div className="mt-3 flex items-baseline justify-between">
-            <span className="sb-display text-3xl font-bold text-indigo-950">{routes.length}</span>
-            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+          <div className="mt-2.5 sm:mt-3 flex items-baseline justify-between">
+            <span className="sb-display text-xl sm:text-2xl font-bold text-indigo-950">{routes.length}</span>
+            <span className="text-[10px] sm:text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
               Active
             </span>
           </div>
-          <p className="mt-1 text-xs text-slate-500">5 Regional Hubs</p>
+          <p className="mt-1 text-[11px] sm:text-xs text-slate-500">5 Regional Hubs</p>
         </div>
 
         {/* Card 2: Bookings */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
+        <div className="bg-white rounded-2xl p-3.5 sm:p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">
               {isAdmin ? 'Confirmed Bookings' : 'My Bookings'}
             </span>
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
-              <CheckCircle2 className="h-4 w-4" />
+            <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+              <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </span>
           </div>
-          <div className="mt-3 flex items-baseline justify-between">
-            <span className="sb-display text-3xl font-bold text-indigo-950">{confirmedBookings.length}</span>
-            <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+          <div className="mt-2.5 sm:mt-3 flex items-baseline justify-between">
+            <span className="sb-display text-xl sm:text-2xl font-bold text-indigo-950">{confirmedBookings.length}</span>
+            <span className="text-[10px] sm:text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
               {totalReservedSeats} seat{totalReservedSeats === 1 ? '' : 's'}
             </span>
           </div>
-          <p className="mt-1 text-xs text-slate-500">{cancelledBookings.length} cancelled</p>
+          <p className="mt-1 text-[11px] sm:text-xs text-slate-500">{cancelledBookings.length} cancelled</p>
         </div>
 
         {/* Card 3: Fleet Occupancy (Admin) OR Wallet Balance (User) */}
         {isAdmin ? (
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
+          <div className="bg-white rounded-2xl p-3.5 sm:p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Fleet Occupancy</span>
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
-                <Ticket className="h-4 w-4" />
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">Fleet Occupancy</span>
+              <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
+                <Ticket className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </span>
             </div>
-            <div className="mt-3 flex items-baseline justify-between">
-              <span className="sb-display text-3xl font-bold text-indigo-950">{occupancyRate}%</span>
-              <span className="text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">
+            <div className="mt-2.5 sm:mt-3 flex items-baseline justify-between">
+              <span className="sb-display text-xl sm:text-2xl font-bold text-indigo-950">{occupancyRate}%</span>
+              <span className="text-[10px] sm:text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">
                 {totalSeatsAvailable} free
               </span>
             </div>
@@ -156,61 +156,61 @@ export default function Dashboard({ routes, bookings, setActiveTab, setSelectedR
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
+          <div className="bg-white rounded-2xl p-3.5 sm:p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Wallet Balance</span>
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
-                <Wallet className="h-4 w-4" />
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">Wallet Balance</span>
+              <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+                <Wallet className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </span>
             </div>
-            <div className="mt-3 flex items-baseline justify-between">
-              <span className="sb-display text-2xl sm:text-3xl font-bold text-indigo-950">
+            <div className="mt-2.5 sm:mt-3 flex items-baseline justify-between">
+              <span className="sb-display text-xl sm:text-2xl font-bold text-indigo-950">
                 Rs. {userBalance.toLocaleString()}
               </span>
-              <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+              <span className="text-[10px] sm:text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                 Available
               </span>
             </div>
-            <p className="mt-1 text-xs text-slate-500">Credit: Rs. 10,000</p>
+            <p className="mt-1 text-[11px] sm:text-xs text-slate-500">Credit: Rs. 10,000</p>
           </div>
         )}
 
         {/* Card 4: Confirmed Revenue (Admin) OR Total Money Spent (User) */}
         {isAdmin ? (
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
+          <div className="bg-white rounded-2xl p-3.5 sm:p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Confirmed Revenue</span>
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
-                <TrendingUp className="h-4 w-4" />
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">Confirmed Revenue</span>
+              <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+                <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </span>
             </div>
-            <div className="mt-3 flex items-baseline justify-between">
-              <span className="sb-display text-2xl font-bold text-indigo-950">
+            <div className="mt-2.5 sm:mt-3 flex items-baseline justify-between">
+              <span className="sb-display text-xl sm:text-2xl font-bold text-indigo-950">
                 Rs. {totalAmount.toLocaleString()}
               </span>
-              <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
+              <span className="text-[10px] sm:text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
                 Net
               </span>
             </div>
-            <p className="mt-1 text-xs text-slate-500">Excludes cancelled trips</p>
+            <p className="mt-1 text-[11px] sm:text-xs text-slate-500">Excludes cancelled trips</p>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
+          <div className="bg-white rounded-2xl p-3.5 sm:p-5 border border-slate-200 shadow-xs hover:border-slate-300 transition-colors">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Money Spent</span>
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700">
-                <CreditCard className="h-4 w-4" />
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Money Spent</span>
+              <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-indigo-50 text-indigo-700">
+                <CreditCard className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </span>
             </div>
-            <div className="mt-3 flex items-baseline justify-between">
-              <span className="sb-display text-2xl font-bold text-indigo-950">
+            <div className="mt-2.5 sm:mt-3 flex items-baseline justify-between">
+              <span className="sb-display text-xl sm:text-2xl font-bold text-indigo-950">
                 Rs. {totalAmount.toLocaleString()}
               </span>
-              <span className="text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200">
+              <span className="text-[10px] sm:text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200">
                 Paid
               </span>
             </div>
-            <p className="mt-1 text-xs text-slate-500">Excludes cancelled trips</p>
+            <p className="mt-1 text-[11px] sm:text-xs text-slate-500">Excludes cancelled trips</p>
           </div>
         )}
       </div>
