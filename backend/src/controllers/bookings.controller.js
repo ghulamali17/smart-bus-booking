@@ -4,12 +4,16 @@ import { prisma } from '../../db.js';
 export async function getBookings(req, res) {
   try {
     const user = req.user;
+    if (!user) {
+      return res.status(401).json({ error: 'Authentication required to view bookings.' });
+    }
+
     let bookings;
-    if (user && user.role === 'admin') {
+    if (user.role === 'admin') {
       bookings = await prisma.booking.findMany({
         orderBy: { created_at: 'desc' },
       });
-    } else if (user && user.id) {
+    } else {
       bookings = await prisma.booking.findMany({
         where: {
           OR: [
@@ -17,10 +21,6 @@ export async function getBookings(req, res) {
             { user_email: user.email },
           ],
         },
-        orderBy: { created_at: 'desc' },
-      });
-    } else {
-      bookings = await prisma.booking.findMany({
         orderBy: { created_at: 'desc' },
       });
     }
@@ -35,6 +35,10 @@ export async function getBookings(req, res) {
 export async function bookTicket(req, res) {
   const { passengerName, passengerAge, routeId, seats } = req.body;
   const user = req.user;
+
+  if (!user) {
+    return res.status(401).json({ error: 'Authentication required to book a ticket.' });
+  }
 
   if (!passengerName || !passengerName.trim()) {
     return res.status(400).json({ error: 'Passenger name is required and cannot be blank.' });
@@ -124,6 +128,10 @@ export async function bookTicket(req, res) {
 export async function cancelBooking(req, res) {
   const bookingId = req.params.id.toUpperCase();
   const user = req.user;
+
+  if (!user) {
+    return res.status(401).json({ error: 'Authentication required to cancel a booking.' });
+  }
 
   try {
     const updatedBooking = await prisma.$transaction(async (tx) => {

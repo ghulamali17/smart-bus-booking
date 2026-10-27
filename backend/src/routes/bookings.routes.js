@@ -5,14 +5,14 @@ import {
   cancelBooking, 
   resetBookings 
 } from '../controllers/bookings.controller.js';
-import { authenticateToken, requireAdmin } from '../middlewares/auth.middleware.js';
+import { authenticateToken, requireAuth, requireAdmin } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
-// Passenger/User bookings
-router.get('/', authenticateToken, getBookings);
-router.post('/', authenticateToken, bookTicket);
-router.post('/:id/cancel', authenticateToken, cancelBooking);
+// Passenger/User bookings require authentication
+router.get('/', authenticateToken, requireAuth, getBookings);
+router.post('/', authenticateToken, requireAuth, bookTicket);
+router.post('/:id/cancel', authenticateToken, requireAuth, cancelBooking);
 
 // Admin-only reset
 router.delete('/reset', authenticateToken, requireAdmin, resetBookings);

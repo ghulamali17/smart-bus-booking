@@ -32,32 +32,52 @@ function MainApp() {
   const [selectedRouteId, setSelectedRouteId] = useState('');
   const [dataLoading, setDataLoading] = useState(true);
 
-  // Fetch routes and bookings from backend
-  const loadRoutesAndBookings = async () => {
+  // Fetch routes from backend (Public, needed for landing page & scheduling)
+  const loadRoutes = async () => {
     try {
-      const [serverRoutes, serverBookings] = await Promise.all([
-        apiGetRoutes().catch(() => []),
-        apiGetBookings().catch(() => []),
-      ]);
-
+      setDataLoading(true);
+      const serverRoutes = await apiGetRoutes().catch(() => []);
       if (serverRoutes && Array.isArray(serverRoutes)) {
         setRoutes(serverRoutes);
         if (serverRoutes.length > 0) {
           setSelectedRouteId((prev) => prev || serverRoutes[0].route_id);
         }
       }
-      if (serverBookings && Array.isArray(serverBookings)) {
-        setBookings(serverBookings);
-      }
     } catch (err) {
-      console.warn('Backend loading warning:', err);
+      console.warn('Backend routes loading warning:', err);
     } finally {
       setDataLoading(false);
     }
   };
 
+
+  const loadBookings = async () => {
+    if (!user) {
+      setBookings([]);
+      return;
+    }
+    try {
+      const serverBookings = await apiGetBookings().catch(() => []);
+      if (serverBookings && Array.isArray(serverBookings)) {
+        setBookings(serverBookings);
+      }
+    } catch (err) {
+      console.warn('Backend bookings loading warning:', err);
+    }
+  };
+
+  // Initial load: Fetch public routes for hero / landing page
   useEffect(() => {
-    loadRoutesAndBookings();
+    loadRoutes();
+  }, []);
+
+  // When auth state changes: Only fetch private user bookings if logged in
+  useEffect(() => {
+    if (user) {
+      loadBookings();
+    } else {
+      setBookings([]);
+    }
   }, [user]);
 
   // Ensure Admin only visits admin management views ('admin' or 'reports')
@@ -90,7 +110,7 @@ function MainApp() {
         return r;
       })
     );
-    loadRoutesAndBookings();
+    await Promise.all([loadRoutes(), loadBookings()]);
     if (refreshUser) refreshUser();
     return newBookingRecord;
   };
@@ -103,7 +123,7 @@ function MainApp() {
     }
 
     await apiCancelBooking(bookingId);
-    await loadRoutesAndBookings();
+    await Promise.all([loadRoutes(), loadBookings()]);
     if (refreshUser) refreshUser();
     return targetBooking;
   };
@@ -111,7 +131,7 @@ function MainApp() {
   // Handle Clear / Reset All Bookings (Admin only, Authoritative Backend)
   const handleResetBookings = async () => {
     await apiResetBookings();
-    await loadRoutesAndBookings();
+    await Promise.all([loadRoutes(), loadBookings()]);
     if (refreshUser) refreshUser();
   };
 
@@ -132,6 +152,7 @@ function MainApp() {
         {!user ? (
           <LandingPage 
             routes={routes} 
+            loading={dataLoading}
             onOpenAuth={() => setShowAuthModal(true)} 
           />
         ) : (
@@ -170,7 +191,7 @@ function MainApp() {
                 bookings={bookings} 
                 onBookSuccess={handleBookSuccess} 
                 selectedRouteId={selectedRouteId} 
-                setSelectedRouteId={setSelectedRouteId}
+                setSelectedRouteId={setSelectedRouteId} 
                 setActiveTab={setActiveTab} 
               />
             )}
@@ -221,7 +242,9 @@ function MainApp() {
               <AdminDashboard 
                 routes={routes} 
                 setRoutes={setRoutes} 
-                onRefreshRoutes={loadRoutesAndBookings} 
+                onRefreshRoutes={async () => {
+                  await Promise.all([loadRoutes(), loadBookings()]);
+                }} 
               />
             )}
           </div>

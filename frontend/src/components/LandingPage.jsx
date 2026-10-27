@@ -11,6 +11,7 @@ import {
   Zap,
   Award,
   RotateCcw,
+  Loader2,
 } from 'lucide-react';
 
 /* -------------------------------------------------------------------------- */
@@ -61,7 +62,7 @@ function BarcodeStripes({ seed }) {
   );
 }
 
-export default function LandingPage({ routes = [], onOpenAuth }) {
+export default function LandingPage({ routes = [], loading = false, onOpenAuth }) {
   const [city, setCity] = useState('All');
 
   /* ---------------- Derived data ---------------- */
@@ -218,7 +219,27 @@ export default function LandingPage({ routes = [], onOpenAuth }) {
                   </span>
                 </div>
 
-                {boardRoutes.length === 0 ? (
+                {loading ? (
+                  <div className="p-4 sm:p-5 space-y-3.5">
+                    <div className="flex items-center gap-2 text-xs font-medium text-amber-300">
+                      <Loader2 className="h-4 w-4 animate-spin text-amber-300" />
+                      <span>Checking live departures...</span>
+                    </div>
+                    {[1, 2, 3, 4].map((n) => (
+                      <div
+                        key={n}
+                        className="grid grid-cols-[76px_minmax(0,1fr)_auto] items-center gap-2.5 py-2 animate-pulse"
+                      >
+                        <div className="h-4 w-14 rounded bg-amber-300/20" />
+                        <div className="space-y-1.5">
+                          <div className="h-3.5 w-28 rounded bg-white/20" />
+                          <div className="h-2.5 w-16 rounded bg-indigo-200/20" />
+                        </div>
+                        <div className="h-5 w-14 rounded-full bg-white/10" />
+                      </div>
+                    ))}
+                  </div>
+                ) : boardRoutes.length === 0 ? (
                   <p className="px-4 py-6 text-sm text-indigo-100/70">
                     No departures are scheduled yet. Check back soon.
                   </p>
@@ -273,10 +294,10 @@ export default function LandingPage({ routes = [], onOpenAuth }) {
         <section aria-label="Network summary">
           <dl className="grid grid-cols-2 divide-y divide-slate-200 overflow-hidden rounded-2xl border border-slate-200 bg-white md:grid-cols-4 md:divide-x md:divide-y-0 shadow-xs">
             {[
-              { label: 'Cities connected', value: stats.cities || '-' },
-              { label: 'Departures scheduled', value: stats.departures || '-' },
-              { label: 'Seats open right now', value: stats.departures ? fmt(stats.seatsOpen) : '-' },
-              { label: 'Fares start at', value: stats.lowestFare ? `Rs. ${fmt(stats.lowestFare)}` : '-' },
+              { label: 'Cities connected', value: loading ? '—' : (stats.cities || '-') },
+              { label: 'Departures scheduled', value: loading ? '—' : (stats.departures || '-') },
+              { label: 'Seats open right now', value: loading ? '—' : (stats.departures ? fmt(stats.seatsOpen) : '-') },
+              { label: 'Fares start at', value: loading ? '—' : (stats.lowestFare ? `Rs. ${fmt(stats.lowestFare)}` : '-') },
             ].map((s) => (
               <div key={s.label} className="px-5 py-4 sm:py-5">
                 <dd className="sb-display text-2xl sm:text-3xl font-bold text-indigo-950">{s.value}</dd>
@@ -320,7 +341,14 @@ export default function LandingPage({ routes = [], onOpenAuth }) {
             )}
           </div>
 
-          {visibleRoutes.length === 0 ? (
+          {loading ? (
+            <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-xs">
+              <div className="inline-flex items-center gap-2 text-sm font-medium text-slate-600">
+                <Loader2 className="h-4 w-4 animate-spin text-indigo-600" />
+                <span>Loading scheduled departures...</span>
+              </div>
+            </div>
+          ) : visibleRoutes.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-10 text-center">
               <p className="font-semibold text-indigo-950 text-sm">No departures to show</p>
               <p className="mt-1 text-xs text-slate-500">
